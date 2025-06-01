@@ -1,0 +1,245 @@
+.pagina-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.conteudo {
+    margin-top: 90px;
+    padding: 20px;
+    flex: 1;
+}
+
+/* Cabeçalho da Página */
+.pagina-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    background-color: white;
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagina-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #0056b3;
+}
+
+/* Cartão principal */
+.card-conteudo {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+    width: 100%;
+    transition: box-shadow 0.3s ease;
+}
+
+.card-conteudo:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+/* Tabela */
+.tabela-container {
+    overflow-x: auto;
+}
+
+.tabela-dados {
+    width: 100%;
+    font-size: 0.9rem;
+    border-collapse: collapse;
+}
+
+.tabela-dados th,
+.tabela-dados td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.tabela-dados th {
+    background-color: #f8f9fa;
+    color: #0056b3;
+    font-weight: 600;
+}
+
+.tabela-dados tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Ações */
+.acoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+/* Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 105;
+}
+
+.modal-container {
+    background: white;
+    border-radius: 10px;
+    padding: 2rem;
+    width: 95%;
+    max-width: 600px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.modal-container h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.6rem;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 0.5rem;
+}
+
+/* Formulário */
+label {
+    display: block;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 1rem;
+}
+
+.form-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Foto */
+.foto-preview {
+    margin-top: 10px;
+    border: 1px dashed #ddd;
+    padding: 5px;
+    display: inline-block;
+}
+
+/* Mensagens */
+.mensagem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding: 12px 15px;
+    border-radius: 5px;
+    color: white;
+    animation: fadeIn 0.5s ease;
+}
+
+.mensagem button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.sucesso {
+    background-color: #28a745;
+}
+
+.erro {
+    background-color: #dc3545;
+}
+
+.alerta {
+    background-color: #ffc107;
+    color: #333;
+}
+
+/* Loading */
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+}
+
+/* Sem dados */
+.sem-dados {
+    text-align: center;
+    padding: 1rem;
+    color: #666;
+}
+
+.usuario-logado-box {
+    margin-bottom: 1rem;
+}
+
+.usuario-logado-box label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.usuario-logado-texto {
+    background-color: #e9ecef;
+    padding: 10px 14px;
+    border-radius: 5px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    color: #495057;
+}
+
+/* Responsividade */
+@media screen and (max-width: 768px) {
+    .pagina-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .form-acoes {
+        flex-direction: column;
+    }
+
+    .acoes {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
