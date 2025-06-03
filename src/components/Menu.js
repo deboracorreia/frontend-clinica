@@ -20,41 +20,71 @@ const Menu = () => {
     return (
         <nav className="menu">
             <div className="logo">
-                <h1>Sistema</h1>
+                <Link to="/" className="logo-link" style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <h1>Sorriso Pleno</h1>
+                </Link>
             </div>
             
             <div className={`menu-toggle ${menuAberto ? 'active' : ''}`} onClick={alternarMenu}>
-                <span></span>
-                <span></span>
-                <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
             </div>
+
             
             <ul className={`menu-items ${menuAberto ? 'active' : ''}`}>
                 <li>
                     <Link 
-                        to="/clientes" 
-                        className={location.pathname === "/clientes" ? "active" : ""}
+                        to="/usuarios" 
+                        className={location.pathname === "/usuarios" ? "active" : ""}
                         onClick={() => setMenuAberto(false)}
                     >
-                        Cliente
+                        Usuários
                     </Link>
                 </li>
                 <li>
                     <Link 
-                        to="/produtos" 
-                        className={location.pathname === "/produtos" ? "active" : ""}
+                        to="/pessoas" 
+                        className={location.pathname === "/pessoas" ? "active" : ""}
                         onClick={() => setMenuAberto(false)}
                     >
-                        Produto
+                        Pessoas
                     </Link>
                 </li>
                 <li>
                     <Link 
-                        to="/pedidos" 
-                        className={location.pathname === "/pedidos" ? "active" : ""}
+                        to="/profissionais" 
+                        className={location.pathname === "/profissionais" ? "active" : ""}
                         onClick={() => setMenuAberto(false)}
                     >
-                        Pedido
+                        Profissionais
+                    </Link>
+                </li>
+                <li>
+                    <Link 
+                        to="/agendamentos" 
+                        className={location.pathname === "/agendamentos" ? "active" : ""}
+                        onClick={() => setMenuAberto(false)}
+                    >
+                        Agendamentos
+                    </Link>
+                </li>
+                <li>
+                    <Link 
+                        to="/atendimentos" 
+                        className={location.pathname === "/atendimentos" ? "active" : ""}
+                        onClick={() => setMenuAberto(false)}
+                    >
+                        Atendimentos
+                    </Link>
+                </li>
+                <li>
+                    <Link 
+                        to="/tratamentos" 
+                        className={location.pathname === "/tratamentos" ? "active" : ""}
+                        onClick={() => setMenuAberto(false)}
+                    >
+                        Tratamentos
                     </Link>
                 </li>
                 <li className="login-out">
@@ -67,4 +97,4 @@ const Menu = () => {
     );
 };
 
-export default Menu;
+export default Menu;

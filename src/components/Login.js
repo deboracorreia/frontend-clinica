@@ -17,17 +17,18 @@ const Login = () => {
             const response = await api.post('/auth/login', { username, password });
             login(response.data.token);
 
-            // Buscar usuário autenticado
-            const usuarioResp = await api.get('/usuario/atual', {
-                headers: {
-                    Authorization: `Bearer ${response.data.token}`
-                }
-            });
+                    // Buscar usuário autenticado
+            const usuarioResp = await api.get('/usuarios/atual', {
+            headers: {
+            Authorization: `Bearer ${response.data.token}`
+            }
+        });
+
 
             // Salvar usuário no localStorage
             localStorage.setItem('usuario', JSON.stringify(usuarioResp.data));
 
-            navigate('/clientes');
+            navigate('/');
         } catch (error) {
             alert('Login inválido!');
         }
@@ -51,4 +52,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default Login;

@@ -11,7 +11,7 @@ export const obterUsuarioLogado = async () => {
     }
 
     // Faz uma requisição ao backend para obter os dados do usuário atual
-    const resposta = await axios.get('http://localhost:8080/api/usuario/atual', {
+    const resposta = await axios.get('http://localhost:8080/api/usuarios/atual', {
 
       headers: {
         Authorization: `Bearer ${token}`

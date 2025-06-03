@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Menu from './Menu';
-import { listarProdutos, salvarProduto, excluirProduto } from '../services/produtoApi';
+import { listarProdutos, salvarProduto, excluirProduto } from '../services/tratamentoApi';
 import '../css/paginasComuns.css';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';

@@ -2,9 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import PaginaInicial from './components/PaginaInicial';
-import Clientes from './components/Clientes';
-import Produtos from './components/Produtos';
-import Pedidos from './components/Pedidos';
+import Usuarios from './components/Usuarios';
 import { isAuthenticated } from './services/auth';
 
 // Componente para rotas protegidas
@@ -25,13 +23,13 @@ const App = () => {
                         <PaginaInicial />
                     </RotaProtegida>
                 } />
-                <Route path="/clientes" element={
+                <Route path="/usuarios" element={
                     <RotaProtegida>
-                        <Clientes />
+                        <Usuarios />
                     </RotaProtegida>
                 } />
 
-                {<Route path="/produtos" element={
+                {/* {<Route path="/produtos" element={
                     <RotaProtegida>
                         <Produtos />
                     </RotaProtegida>
@@ -43,7 +41,7 @@ const App = () => {
                             <Pedidos />
                         </RotaProtegida>
                     } />
-                }
+                } */}
 
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
