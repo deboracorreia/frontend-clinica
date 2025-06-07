@@ -106,7 +106,7 @@ const Pessoas = () => {
       contatoemergencia: pessoa.contatoemergencia || '',
       nomecontatoemergencia: pessoa.nomecontatoemergencia || '',
       contatopreferencial: pessoa.contatopreferencial || '',
-      idusuario: pessoa.usuario?.idusuario || ''
+      idusuario: pessoa.idusuario || ''
     });
     setMostrarFormulario(true);
   };

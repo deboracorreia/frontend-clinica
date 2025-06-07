@@ -7,6 +7,9 @@ import Pessoas from './components/Pessoa';
 import  Profissional from './components/Profissional';
 import { isAuthenticated } from './services/auth';
 import Profissionais from './components/Profissional';
+import Agendamento from './components/Agendamento';
+import Atendimentos from './components/Atendimento';
+import Tratamentos from './components/Tratamento';
 
 // Componente para rotas protegidas
 const RotaProtegida = ({ children }) => {
@@ -44,19 +47,27 @@ const App = () => {
                     </RotaProtegida>
                 } />
 
-                {/* {<Route path="/produtos" element={
+                <Route path="/agendamentos" element={
                     <RotaProtegida>
-                        <Produtos />
+                        <Agendamento />
                     </RotaProtegida>
                 } />
-                }
+
                 {
-                    <Route path="/pedidos" element={
+                    <Route path="/atendimentos" element={
                         <RotaProtegida>
-                            <Pedidos />
+                            <Atendimentos />
                         </RotaProtegida>
                     } />
-                } */}
+                }
+
+                 {
+                    <Route path="/tratamentos" element={
+                        <RotaProtegida>
+                            <Tratamentos />
+                        </RotaProtegida>
+                    } />
+                }
 
                 <Route path="*" element={<Navigate to="/" />} />
             </Routes>
