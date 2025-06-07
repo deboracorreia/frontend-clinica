@@ -167,7 +167,7 @@ const Pedidos = () => {
                         <td>{p.dataPedido}</td>
                         <td>{p.cliente?.nome}</td>
                         <td>{p.valorTotalPedido}</td>
-                        <td>{p.idUsuario}</td>
+                        <td>{p.idusuario}</td>
                         <td>
                           <BotaoComIcone tipo="editar" texto="Editar" onClick={(e) => { e.stopPropagation(); abrirModal(p); }} />
                           <BotaoComIcone tipo="excluir" texto="Excluir" onClick={(e) => { e.stopPropagation(); excluirPedidoHandler(p.id); }} />

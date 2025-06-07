@@ -1,52 +1,156 @@
-import api from './api';
+import React, { useState, useEffect } from 'react';
+import Menu from './Menu';
+import { listarTratamentos, excluirTratamento, salvarTratamento } from '../services/tratamentoApi';
+import BotaoComIcone from './BotaoComIcone';
+import '../css/paginasComuns.css';
 
-// Listar todos os tratamentos
-export const listarTratamentos = async () => {
-  try {
-    const response = await api.get('/tratamentos');
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao listar tratamentos:', error);
-    throw error;
-  }
-};
+const Tratamentos = () => {
+  const [tratamentos, setTratamentos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [mostrarFormulario, setMostrarFormulario] = useState(false);
+  const [tratamentoAtual, setTratamentoAtual] = useState({
+    nometratamento: ''
+  });
+  const [mensagem, setMensagem] = useState({ texto: '', tipo: '' });
 
-// Buscar tratamento por ID
-export const buscarTratamentoPorId = async (id) => {
-  try {
-    const response = await api.get(`/tratamentos/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao buscar tratamento:', error);
-    throw error;
-  }
-};
+  useEffect(() => {
+    carregarTratamentos();
+  }, []);
 
-// Salvar tratamento (criar ou atualizar)
-export const salvarTratamento = async (tratamento) => {
-  try {
-    if (tratamento.id) {
-      // Atualizar tratamento existente
-      const response = await api.put(`/tratamentos/${tratamento.id}`, tratamento);
-      return response.data;
-    } else {
-      // Criar novo tratamento
-      const response = await api.post('/tratamentos', tratamento);
-      return response.data;
+  const carregarTratamentos = async () => {
+    try {
+      setLoading(true);
+      const data = await listarTratamentos();
+      setTratamentos(data);
+    } catch {
+      setMensagem({ texto: 'Erro ao carregar tratamentos', tipo: 'erro' });
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error('Erro ao salvar tratamento:', error);
-    throw error;
-  }
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setTratamentoAtual({ ...tratamentoAtual, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await salvarTratamento(tratamentoAtual);
+      setMensagem({ texto: 'Tratamento salvo com sucesso!', tipo: 'sucesso' });
+      setMostrarFormulario(false);
+      setTratamentoAtual({ nometratamento: '' });
+      carregarTratamentos();
+    } catch {
+      setMensagem({ texto: 'Erro ao salvar tratamento', tipo: 'erro' });
+    }
+  };
+
+  const handleExcluir = async (id) => {
+    if (window.confirm('Deseja excluir este tratamento?')) {
+      try {
+        await excluirTratamento(id);
+        setMensagem({ texto: 'Tratamento excluído com sucesso!', tipo: 'sucesso' });
+        carregarTratamentos();
+      } catch {
+        setMensagem({ texto: 'Erro ao excluir tratamento', tipo: 'erro' });
+      }
+    }
+  };
+
+  const handleEditar = (tratamento) => {
+    setTratamentoAtual({
+      idtratamento: tratamento.idtratamento,
+      nometratamento: tratamento.nometratamento || ''
+    });
+    setMostrarFormulario(true);
+  };
+
+  return (
+    <>
+      <Menu />
+      <div className="pagina-container" style={{ paddingTop: '150px' }}>
+        <main className="conteudo" style={{ maxWidth: '1000px', margin: '0 auto', paddingTop: '80px' }}>
+          <div className="pagina-header">
+            <h1>Gestão de Tratamentos</h1>
+            <BotaoComIcone
+              tipo="adicionar"
+              texto="Novo Tratamento"
+              onClick={() => {
+                setTratamentoAtual({ nometratamento: '' });
+                setMostrarFormulario(true);
+              }}
+            />
+          </div>
+
+          {mensagem.texto && (
+            <div className={`mensagem ${mensagem.tipo}`}>
+              {mensagem.texto}
+              <button onClick={() => setMensagem({ texto: '', tipo: '' })}>×</button>
+            </div>
+          )}
+
+          <div className="card-conteudo">
+            <div className="tabela-container">
+              {loading ? (
+                <div className="loading">Carregando...</div>
+              ) : (
+                <table className="tabela-dados">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nome do Tratamento</th>
+                      <th>Ações</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {tratamentos.map((tratamento) => (
+                      <tr key={tratamento.idtratamento}>
+                        <td>{tratamento.idtratamento}</td>
+                        <td>{tratamento.nometratamento}</td>
+                        <td>
+                          <div className="acoes">
+                            <BotaoComIcone tipo="editar" texto="Editar" onClick={() => handleEditar(tratamento)} />
+                            <BotaoComIcone tipo="excluir" texto="Excluir" onClick={() => handleExcluir(tratamento.idtratamento)} />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </div>
+        </main>
+
+        {mostrarFormulario && (
+          <div className="modal-overlay">
+            <div className="modal-container">
+              <button className="modal-close" onClick={() => setMostrarFormulario(false)}>×</button>
+              <h2>{tratamentoAtual.idtratamento ? 'Editar Tratamento' : 'Novo Tratamento'}</h2>
+              <form onSubmit={handleSubmit}>
+                <label>Nome do Tratamento</label>
+                <input
+                  name="nometratamento"
+                  type="text"
+                  value={tratamentoAtual.nometratamento}
+                  onChange={handleChange}
+                  placeholder="Digite o nome do tratamento"
+                  required
+                />
+
+                <div className="form-acoes">
+                  <BotaoComIcone tipo="salvar" texto="Salvar" type="submit" />
+                  <BotaoComIcone tipo="excluir" texto="Cancelar" onClick={() => setMostrarFormulario(false)} />
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
 };
 
-// Excluir tratamento
-export const excluirTratamento = async (id) => {
-  try {
-    const response = await api.delete(`/tratamentos/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error('Erro ao excluir tratamento:', error);
-    throw error;
-  }
-};
+export default Tratamentos;

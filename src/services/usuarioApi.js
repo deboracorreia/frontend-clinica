@@ -58,7 +58,7 @@ export const salvarUsuario = async (usuario) => {
             return response.data;
         } else {
             // Criação - senha é obrigatória
-            if (!dadosUsuario.senha || dadosUsuario.senha.trim() === '') {
+            if (!dadosUsuario.senha || dadosUsuario.senha.trim() === '') {  
                 throw new Error('Senha é obrigatória para novo usuário');
             }
             
@@ -96,11 +96,11 @@ export const validarLogin = async (login, senha) => {
 };
 
 // Verificar se login já existe
-export const verificarLoginExistente = async (login, idUsuarioAtual = null) => {
+export const verificarLoginExistente = async (login, idusuarioAtual = null) => {
     try {
         const params = { login: login.trim() };
-        if (idUsuarioAtual) {
-            params.excludeId = idUsuarioAtual;
+        if (idusuarioAtual) {
+            params.excludeId = idusuarioAtual;
         }
         
         const response = await api.get('/api/usuarios/verificar-login', { params });

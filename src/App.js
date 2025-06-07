@@ -3,7 +3,10 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import PaginaInicial from './components/PaginaInicial';
 import Usuarios from './components/Usuarios';
+import Pessoas from './components/Pessoa';
+import  Profissional from './components/Profissional';
 import { isAuthenticated } from './services/auth';
+import Profissionais from './components/Profissional';
 
 // Componente para rotas protegidas
 const RotaProtegida = ({ children }) => {
@@ -26,6 +29,18 @@ const App = () => {
                 <Route path="/usuarios" element={
                     <RotaProtegida>
                         <Usuarios />
+                    </RotaProtegida>
+                } />
+
+                <Route path="/pessoas" element={
+                    <RotaProtegida>
+                        <Pessoas />
+                    </RotaProtegida>
+                } />
+
+                <Route path="/profissionais" element={
+                    <RotaProtegida>
+                        <Profissionais />
                     </RotaProtegida>
                 } />
 
