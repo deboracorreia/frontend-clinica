@@ -40,10 +40,10 @@ const Tratamentos = () => {
       await salvarTratamento(tratamentoAtual);
       setMensagem({ texto: 'Tratamento salvo com sucesso!', tipo: 'sucesso' });
       setMostrarFormulario(false);
-      setTratamentoAtual({ nometratamento: '' });
+      limparFormulario();
       carregarTratamentos();
-    } catch {
-      setMensagem({ texto: 'Erro ao salvar tratamento', tipo: 'erro' });
+    } catch (error) {
+      setMensagem({ texto: error.message || 'Erro ao salvar tratamento', tipo: 'erro' });
     }
   };
 
@@ -67,18 +67,24 @@ const Tratamentos = () => {
     setMostrarFormulario(true);
   };
 
+  const limparFormulario = () => {
+    setTratamentoAtual({
+      nometratamento: ''
+    });
+  };
+
   return (
     <>
       <Menu />
       <div className="pagina-container" style={{ paddingTop: '150px' }}>
-        <main className="conteudo" style={{ maxWidth: '1000px', margin: '0 auto', paddingTop: '80px' }}>
+        <main className="conteudo" style={{ maxWidth: '1200px', margin: '0 auto', paddingTop: '80px' }}>
           <div className="pagina-header">
             <h1>Gestão de Tratamentos</h1>
             <BotaoComIcone
               tipo="adicionar"
               texto="Novo Tratamento"
               onClick={() => {
-                setTratamentoAtual({ nometratamento: '' });
+                limparFormulario();
                 setMostrarFormulario(true);
               }}
             />
@@ -126,21 +132,28 @@ const Tratamentos = () => {
 
         {mostrarFormulario && (
           <div className="modal-overlay">
-            <div className="modal-container">
+            <div className="modal-container" style={{ maxWidth: '600px', maxHeight: '90vh', overflowY: 'auto' }}>
               <button className="modal-close" onClick={() => setMostrarFormulario(false)}>×</button>
               <h2>{tratamentoAtual.idtratamento ? 'Editar Tratamento' : 'Novo Tratamento'}</h2>
               <form onSubmit={handleSubmit}>
-                <label>Nome do Tratamento</label>
-                <input
-                  name="nometratamento"
-                  type="text"
-                  value={tratamentoAtual.nometratamento}
-                  onChange={handleChange}
-                  placeholder="Digite o nome do tratamento"
-                  required
-                />
+                <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '15px' }}>
+                  
+                  <div>
+                    <label>Nome do Tratamento *</label>
+                    <input
+                      name="nometratamento"
+                      type="text"
+                      value={tratamentoAtual.nometratamento}
+                      onChange={handleChange}
+                      required
+                      placeholder="Digite o nome do tratamento"
+                      maxLength="100"
+                    />
+                  </div>
 
-                <div className="form-acoes">
+                </div>
+
+                <div className="form-acoes" style={{ marginTop: '20px' }}>
                   <BotaoComIcone tipo="salvar" texto="Salvar" type="submit" />
                   <BotaoComIcone tipo="excluir" texto="Cancelar" onClick={() => setMostrarFormulario(false)} />
                 </div>
