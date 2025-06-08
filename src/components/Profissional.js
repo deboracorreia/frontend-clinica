@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import Menu from './Menu';
 import { listarProfissionais, excluirProfissional, salvarProfissional } from '../services/profissionalApi';
+import { listarUsuarios } from '../services/usuarioApi'; // <<<< ADICIONADO
 import BotaoComIcone from './BotaoComIcone';
 import '../css/paginasComuns.css';
 
 const Profissionais = () => {
   const [profissionais, setProfissionais] = useState([]);
+  const [usuarios, setUsuarios] = useState([]); // <<<< ADICIONADO
   const [loading, setLoading] = useState(true);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [profissionalAtual, setProfissionalAtual] = useState({
-    usuario: { id: '' },   // <<< ALTERAÇÃO AQUI
+    idusuario: '', // <<<< ALTERADO: removido o objeto usuario
     especialidade: '',
     cro: '',
     estadocro: '',
@@ -18,8 +20,25 @@ const Profissionais = () => {
   const [mensagem, setMensagem] = useState({ texto: '', tipo: '' });
 
   useEffect(() => {
-    carregarProfissionais();
+    carregarDados(); // <<<< ALTERADO: agora carrega usuários também
   }, []);
+
+  // <<<< NOVO MÉTODO: carrega profissionais e usuários
+  const carregarDados = async () => {
+    try {
+      setLoading(true);
+      const [profissionaisData, usuariosData] = await Promise.all([
+        listarProfissionais(),
+        listarUsuarios()
+      ]);
+      setProfissionais(profissionaisData);
+      setUsuarios(usuariosData);
+    } catch {
+      setMensagem({ texto: 'Erro ao carregar dados', tipo: 'erro' });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const carregarProfissionais = async () => {
     try {
@@ -44,10 +63,10 @@ const Profissionais = () => {
       await salvarProfissional(profissionalAtual);
       setMensagem({ texto: 'Profissional salvo com sucesso!', tipo: 'sucesso' });
       setMostrarFormulario(false);
-      setProfissionalAtual({ idusuario: '', especialidade: '', cro: '', estadocro: '', ativo: 1 });
+      limparFormulario(); // <<<< ALTERADO: usar método limpar
       carregarProfissionais();
-    } catch {
-      setMensagem({ texto: 'Erro ao salvar profissional', tipo: 'erro' });
+    } catch (error) {
+      setMensagem({ texto: error.message || 'Erro ao salvar profissional', tipo: 'erro' }); // <<<< MELHORADO
     }
   };
 
@@ -70,12 +89,23 @@ const Profissionais = () => {
       especialidade: profissional.especialidade || '',
       cro: profissional.cro || '',
       estadocro: profissional.estadocro || '',
-      ativo: profissional.ativo
+      ativo: profissional.ativo // <<<< ALTERADO: usar boolean diretamente
     });
     setMostrarFormulario(true);
   };
 
-  const formatarAtivo = (ativo) => (ativo === 1 ? 'Ativo' : 'Inativo');
+  // <<<< NOVO MÉTODO: limpar formulário
+  const limparFormulario = () => {
+    setProfissionalAtual({
+      idusuario: '',
+      especialidade: '',
+      cro: '',
+      estadocro: '',
+      ativo: true // <<<< ALTERADO: usar boolean
+    });
+  };
+
+  const formatarAtivo = (ativo) => (ativo ? 'Ativo' : 'Inativo'); // <<<< ALTERADO: boolean direto
 
   return (
     <>
@@ -88,7 +118,7 @@ const Profissionais = () => {
               tipo="adicionar"
               texto="Novo Profissional"
               onClick={() => {
-                setProfissionalAtual({ idusuario: '', especialidade: '', cro: '', estadocro: '', ativo: 1 });
+                limparFormulario(); // <<<< ALTERADO: usar método limpar
                 setMostrarFormulario(true);
               }}
             />
@@ -109,6 +139,7 @@ const Profissionais = () => {
                 <table className="tabela-dados">
                   <thead>
                     <tr>
+                      <th>Usuário</th> {/* <<<< ADICIONADO */}
                       <th>Especialidade</th>
                       <th>CRO</th>
                       <th>Estado</th>
@@ -119,10 +150,11 @@ const Profissionais = () => {
                   <tbody>
                     {profissionais.map((profissional) => (
                       <tr key={profissional.idprofissional}>
+                        <td>{profissional.loginUsuario || 'Sem usuário'}</td> {/* <<<< ALTERADO: usar loginUsuario do DTO */}
                         <td>{profissional.especialidade}</td>
                         <td>{profissional.cro}</td>
                         <td>{profissional.estadocro}</td>
-                        <td>{formatarAtivo(profissional.ativo)}</td>
+                        <td>{formatarAtivo(profissional.ativo)}</td> {/* <<<< ALTERADO: boolean direto */}
                         <td>
                           <div className="acoes">
                             <BotaoComIcone tipo="editar" texto="Editar" onClick={() => handleEditar(profissional)} />
@@ -144,51 +176,89 @@ const Profissionais = () => {
               <button className="modal-close" onClick={() => setMostrarFormulario(false)}>×</button>
               <h2>{profissionalAtual.idprofissional ? 'Editar Profissional' : 'Novo Profissional'}</h2>
               <form onSubmit={handleSubmit}>
-                <label>ID Usuário</label>
-                <input
+                
+                {/* <<<< ALTERADO: Select com lista de usuários */}
+                <label>Vincular a Usuário *</label>
+                <select
                   name="idusuario"
-                  type="number"
                   value={profissionalAtual.idusuario}
                   onChange={handleChange}
                   required
-                />
+                >
+                  <option value="">Selecione um usuário</option>
+                  {usuarios.map((usuario) => (
+                    <option key={usuario.idusuario} value={usuario.idusuario}>
+                      {usuario.login}
+                    </option>
+                  ))}
+                </select>
 
-                <label>Especialidade</label>
+                <label>Especialidade *</label>
                 <input
                   name="especialidade"
                   type="text"
                   value={profissionalAtual.especialidade}
                   onChange={handleChange}
                   required
+                  placeholder="Ex: Ortodontia, Endodontia..."
                 />
 
-                <label>CRO</label>
+                <label>CRO *</label>
                 <input
                   name="cro"
                   type="text"
                   value={profissionalAtual.cro}
                   onChange={handleChange}
                   required
+                  placeholder="Número do CRO"
                 />
 
-                <label>Estado do CRO</label>
-                <input
+                <label>Estado do CRO *</label>
+                <select
                   name="estadocro"
-                  type="text"
                   value={profissionalAtual.estadocro}
                   onChange={handleChange}
                   required
-                />
+                >
+                  <option value="">Selecione o estado</option>
+                  <option value="AC">AC</option>
+                  <option value="AL">AL</option>
+                  <option value="AP">AP</option>
+                  <option value="AM">AM</option>
+                  <option value="BA">BA</option>
+                  <option value="CE">CE</option>
+                  <option value="DF">DF</option>
+                  <option value="ES">ES</option>
+                  <option value="GO">GO</option>
+                  <option value="MA">MA</option>
+                  <option value="MT">MT</option>
+                  <option value="MS">MS</option>
+                  <option value="MG">MG</option>
+                  <option value="PA">PA</option>
+                  <option value="PB">PB</option>
+                  <option value="PR">PR</option>
+                  <option value="PE">PE</option>
+                  <option value="PI">PI</option>
+                  <option value="RJ">RJ</option>
+                  <option value="RN">RN</option>
+                  <option value="RS">RS</option>
+                  <option value="RO">RO</option>
+                  <option value="RR">RR</option>
+                  <option value="SC">SC</option>
+                  <option value="SP">SP</option>
+                  <option value="SE">SE</option>
+                  <option value="TO">TO</option>
+                </select>
 
-                <label>Ativo</label>
+                <label>Status *</label>
                 <select
                   name="ativo"
-                  value={profissionalAtual.ativo}
-                  onChange={handleChange}
+                  value={profissionalAtual.ativo ? "true" : "false"}
+                  onChange={(e) => setProfissionalAtual({...profissionalAtual, ativo: e.target.value === 'true'})}
                   required
                 >
-                  <option value={1}>Ativo</option>
-                  <option value={0}>Inativo</option>
+                  <option value="true">Ativo</option>
+                  <option value="false">Inativo</option>
                 </select>
 
                 <div className="form-acoes">
