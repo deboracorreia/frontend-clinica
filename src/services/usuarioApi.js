@@ -44,7 +44,7 @@ export const salvarUsuario = async (usuario) => {
             login: usuario.login?.trim(),
             senha: usuario.senha,
             idpessoa: parseInt(usuario.idpessoa),
-            tipo: usuario.tipo?.trim()?.toLowerCase() || 'usuario'
+            tipo: usuario.tipo || '1'
         };
 
         // Se é edição (tem ID)
@@ -62,7 +62,7 @@ export const salvarUsuario = async (usuario) => {
                 throw new Error('Senha é obrigatória para novo usuário');
             }
             
-            const response = await api.post('/api/usuarios', dadosUsuario);
+            const response = await api.post('/api/auth/register', dadosUsuario);
             return response.data;
         }
     } catch (error) {

@@ -56,8 +56,14 @@ const Usuarios = () => {
         await excluirUsuario(id);
         setMensagem({ texto: 'Usuário excluído com sucesso!', tipo: 'sucesso' });
         carregarUsuarios();
-      } catch {
-        setMensagem({ texto: 'Erro ao excluir usuário', tipo: 'erro' });
+      } catch (error) {
+        // Pegar a mensagem específica do erro do backend
+        const mensagemErro = error.response?.data?.mensagem || 
+                            error.response?.data?.message || 
+                            error.message || 
+                            'Erro ao excluir usuário';
+        
+        setMensagem({ texto: mensagemErro, tipo: 'erro' });
       }
     }
   };

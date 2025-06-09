@@ -139,7 +139,7 @@ const Profissionais = () => {
                 <table className="tabela-dados">
                   <thead>
                     <tr>
-                      <th>Usuário</th> {/* <<<< ADICIONADO */}
+                      <th>Usuário</th>
                       <th>Especialidade</th>
                       <th>CRO</th>
                       <th>Estado</th>
@@ -150,11 +150,11 @@ const Profissionais = () => {
                   <tbody>
                     {profissionais.map((profissional) => (
                       <tr key={profissional.idprofissional}>
-                        <td>{profissional.loginUsuario || 'Sem usuário'}</td> {/* <<<< ALTERADO: usar loginUsuario do DTO */}
+                        <td>{profissional.loginUsuario || 'Sem usuário'}</td>
                         <td>{profissional.especialidade}</td>
                         <td>{profissional.cro}</td>
                         <td>{profissional.estadocro}</td>
-                        <td>{formatarAtivo(profissional.ativo)}</td> {/* <<<< ALTERADO: boolean direto */}
+                        <td>{formatarAtivo(profissional.ativo)}</td>
                         <td>
                           <div className="acoes">
                             <BotaoComIcone tipo="editar" texto="Editar" onClick={() => handleEditar(profissional)} />

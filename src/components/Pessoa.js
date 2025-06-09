@@ -258,9 +258,9 @@ const Pessoas = () => {
                       onChange={handleChange}
                     >
                       <option value="">Selecione</option>
-                      <option value="M">Masculino</option>
-                      <option value="F">Feminino</option>
-                      <option value="O">Outro</option>
+                      <option value="Masculino">Masculino</option>
+                      <option value="Feminino">Feminino</option>
+                      <option value="Outro">Outro</option>
                     </select>
                   </div>
 
