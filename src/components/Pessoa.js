@@ -32,6 +32,71 @@ const Pessoas = () => {
     carregarDados();
   }, []);
 
+  // Funções de máscara
+  const aplicarMascaraCPF = (value) => {
+    // Remove tudo que não é dígito
+    let cpf = value.replace(/\D/g, '');
+    
+    // Limita a 11 dígitos
+    cpf = cpf.substring(0, 11);
+    
+    // Aplica a máscara XXX.XXX.XXX-XX
+    if (cpf.length > 9) {
+      cpf = cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+    } else if (cpf.length > 6) {
+      cpf = cpf.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+    } else if (cpf.length > 3) {
+      cpf = cpf.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+    }
+    
+    return cpf;
+  };
+
+  const aplicarMascaraCEP = (value) => {
+    // Remove tudo que não é dígito
+    let cep = value.replace(/\D/g, '');
+    
+    // Limita a 8 dígitos
+    cep = cep.substring(0, 8);
+    
+    // Aplica a máscara XXXXX-XXX
+    if (cep.length > 5) {
+      cep = cep.replace(/(\d{5})(\d{1,3})/, '$1-$2');
+    }
+    
+    return cep;
+  };
+
+  const aplicarMascaraTelefone = (value) => {
+    // Remove tudo que não é dígito
+    let telefone = value.replace(/\D/g, '');
+    
+    // Limita a 11 dígitos
+    telefone = telefone.substring(0, 11);
+    
+    // Aplica a máscara (XX) XXXXX-XXXX
+    if (telefone.length > 10) {
+      telefone = telefone.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+    } else if (telefone.length > 6) {
+      telefone = telefone.replace(/(\d{2})(\d{4})(\d{1,4})/, '($1) $2-$3');
+    } else if (telefone.length > 2) {
+      telefone = telefone.replace(/(\d{2})(\d{1,4})/, '($1) $2');
+    }
+    
+    return telefone;
+  };
+
+  // Função para remover máscaras antes de salvar
+  const removerMascaras = (dados) => {
+    return {
+      ...dados,
+      cpf: dados.cpf.replace(/\D/g, ''),
+      cep: dados.cep.replace(/\D/g, ''),
+      celular: dados.celular.replace(/\D/g, ''),
+      contatoemergencia: dados.contatoemergencia.replace(/\D/g, '')
+    };
+  };
+
   const carregarDados = async () => {
     try {
       setLoading(true);
@@ -62,13 +127,33 @@ const Pessoas = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setPessoaAtual({ ...pessoaAtual, [name]: value });
+    let valorFormatado = value;
+
+    // Aplica máscara conforme o campo
+    switch (name) {
+      case 'cpf':
+        valorFormatado = aplicarMascaraCPF(value);
+        break;
+      case 'cep':
+        valorFormatado = aplicarMascaraCEP(value);
+        break;
+      case 'celular':
+      case 'contatoemergencia':
+        valorFormatado = aplicarMascaraTelefone(value);
+        break;
+      default:
+        valorFormatado = value;
+    }
+
+    setPessoaAtual({ ...pessoaAtual, [name]: valorFormatado });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await salvarPessoa(pessoaAtual);
+      // Remove máscaras antes de enviar para a API
+      const dadosLimpos = removerMascaras(pessoaAtual);
+      await salvarPessoa(dadosLimpos);
       setMensagem({ texto: 'Pessoa salva com sucesso!', tipo: 'sucesso' });
       setMostrarFormulario(false);
       limparFormulario();
@@ -93,17 +178,17 @@ const Pessoas = () => {
   const handleEditar = (pessoa) => {
     setPessoaAtual({
       idpessoa: pessoa.idpessoa,
-      cpf: pessoa.cpf || '',
+      cpf: aplicarMascaraCPF(pessoa.cpf || ''),
       nomecompleto: pessoa.nomecompleto || '',
       datanascimento: pessoa.datanascimento || '',
       sexo: pessoa.sexo || '',
       endereco: pessoa.endereco || '',
-      cep: pessoa.cep || '',
+      cep: aplicarMascaraCEP(pessoa.cep || ''),
       cidade: pessoa.cidade || '',
       uf: pessoa.uf || '',
       email: pessoa.email || '',
-      celular: pessoa.celular || '',
-      contatoemergencia: pessoa.contatoemergencia || '',
+      celular: aplicarMascaraTelefone(pessoa.celular || ''),
+      contatoemergencia: aplicarMascaraTelefone(pessoa.contatoemergencia || ''),
       nomecontatoemergencia: pessoa.nomecontatoemergencia || '',
       contatopreferencial: pessoa.contatopreferencial || '',
       idusuario: pessoa.idusuario || ''

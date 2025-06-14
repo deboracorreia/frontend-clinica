@@ -1,8 +1,8 @@
 :root {
     --altura-menu: 70px;
-  }
-  
-  .menu {
+}
+
+.menu {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -17,83 +17,144 @@
     z-index: 100;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     box-sizing: border-box;
-  }
-  
-  .logo h1 {
+}
+
+/* Remover regra antiga do h1 */
+.logo h1 {
     margin: 0;
     font-size: 1.5rem;
-  }
-  
-  .menu-items {
+}
+
+/* CSS da logo - FORA do media query */
+.logo-img {
+    height: 95px !important; /* Aumentado de 40px para 55px */
+    width: auto !important;
+    max-width: 125px !important; /* Aumentado de 80px para 110px */
+    object-fit: contain !important;
+    transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+    transform: scale(1.05);
+}
+
+.logo {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+}
+
+.logo-link {
+    display: flex !important;
+    align-items: center !important;
+    height: 100% !important;
+}
+
+.menu-items {
     display: flex;
     list-style: none;
     margin: 0;
     padding: 0;
-  }
-  
-  .menu-items li {
+}
+
+/* FORÇAR ORDEM COM CSS - MUITO AGRESSIVO */
+.menu-items li.sobre {
+    order: -999 !important;
+    position: relative;
+    z-index: 999;
+}
+
+.menu-items li:not(.sobre):not(.login-out):not(.login-in) {
+    order: 0 !important;
+}
+
+.menu-items li.login-out,
+.menu-items li.login-in {
+    order: 999 !important;
+}
+
+.menu-items li {
     margin: 0 5px;
-  }
-  
-  .menu-items a {
+}
+
+.menu-items a {
     color: white;
     text-decoration: none;
     padding: 10px 12px;
     border-radius: 5px;
     transition: background-color 0.3s;
     display: block;
-  }
-  
-  .menu-items a:hover,
-  .menu-items a.active {
+}
+
+.menu-items a:hover,
+.menu-items a.active {
     background-color: #0056b3;
-  }
-  
-  .menu-toggle {
+}
+
+.menu-toggle {
     display: none;
     flex-direction: column;
     justify-content: space-between;
     width: 30px;
     height: 21px;
     cursor: pointer;
-  }
-  
-  .menu-toggle span {
+}
+
+.menu-toggle span {
     height: 3px;
     width: 100%;
     background-color: white;
     border-radius: 2px;
-  }
-  
-  /* Mobile */
-  @media screen and (max-width: 768px) {
+}
+
+/* Mobile */
+@media screen and (max-width: 768px) {
     .menu-toggle {
-      display: flex;
+        display: flex;
     }
-  
+
     .menu-items {
-      position: absolute;
-      top: var(--altura-menu);
-      left: 0;
-      background-color: #007bff;
-      width: 100%;
-      flex-direction: column;
-      align-items: center;
-      display: none;
+        position: absolute;
+        top: var(--altura-menu);
+        left: 0;
+        background-color: #007bff;
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+        display: none;
     }
-  
+
     .menu-items.active {
-      display: flex;
+        display: flex;
     }
-  
+
+    /* MANTER ORDEM FIXA NO MOBILE TAMBÉM */
+    .menu-items li.sobre {
+        order: -999 !important;
+    }
+
+    .menu-items li:not(.sobre):not(.login-out):not(.login-in) {
+        order: 0 !important;
+    }
+
+    .menu-items li.login-out,
+    .menu-items li.login-in {
+        order: 999 !important;
+    }
+
     .menu-items li {
-      width: 100%;
-      text-align: center;
+        width: 100%;
+        text-align: center;
     }
-  
+
     .menu-items a {
-      padding: 1.5rem 0;
-      width: 100%;
+        padding: 1.5rem 0;
+        width: 100%;
     }
-  }
-  
+
+    /* Logo menor no mobile */
+    .logo-img {
+        height: 90px !important; /* Aumentado de 35px para 45px */
+        max-width: 100px !important; /* Aumentado de 70px para 90px */
+    }
+}

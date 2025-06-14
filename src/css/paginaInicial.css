@@ -35,6 +35,7 @@ body {
     margin-bottom: 2rem;
 }
 
+/* Container dos cards */
 .cards-container {
     display: flex;
     justify-content: center;
@@ -43,14 +44,33 @@ body {
     margin-top: 2rem;
 }
 
+/* Links dos cards */
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    width: 250px;
+}
+
+.card-link:hover,
+.card-link:focus,
+.card-link:active,
+.card-link:visited {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Estilo dos cards */
 .card {
     background: white;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     padding: 2rem;
-    width: 250px;
+    width: 100%;
     text-align: center;
     transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    box-sizing: border-box;
 }
 
 .card:hover {
@@ -61,12 +81,12 @@ body {
 .icon {
     font-size: 3rem;
     margin-bottom: 1rem;
+    display: block;
 }
 
 .card h3 {
     color: #007bff;
-    margin-top: 0;
-    margin-bottom: 1rem;
+    margin: 0 0 1rem 0;
 }
 
 .card p {
@@ -74,14 +94,22 @@ body {
     margin: 0;
 }
 
+
+
 /* Responsividade */
 @media screen and (max-width: 768px) {
+    .conteudo {
+        margin-top: 3cm;
+        padding: 0.5cm;
+    }
+    
     .cards-container {
         flex-direction: column;
         align-items: center;
+        gap: 1.5rem;
     }
     
-    .card {
+    .card-link {
         width: 100%;
         max-width: 300px;
     }

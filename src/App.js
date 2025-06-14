@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Sobre from './components/Sobre'; // ou './pages/Sobre' se estiver em outra pasta
 import Login from './components/Login';
 import PaginaInicial from './components/PaginaInicial';
 import Usuarios from './components/Usuarios';
@@ -60,7 +61,9 @@ const App = () => {
             <Routes>
                 {/* Rota pública de login */}
                 <Route path="/login" element={<Login />} />
-                
+
+                <Route path="/sobre" element={<Sobre />} />
+
                 {/* Página inicial - acessível para qualquer usuário logado */}
                 <Route path="/" element={
                     <RotaProtegida>
